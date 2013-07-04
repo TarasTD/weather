@@ -5,7 +5,7 @@ from urllib2 import urlopen
 from Tkinter import *
 
 class gui(Frame):
-  def __init__(self, parent):
+  def __init__(self, parent, bg='white'):
     self.city_name_base = StringVar()
     self.city_name_base.set('City name')
     Frame.__init__(self, parent, bg='White')
@@ -14,22 +14,28 @@ class gui(Frame):
     
   def initUI(self):
     self.parent.title("Weather checker 1.0")
-    self.pack(fill=BOTH, expand=1)
+    self.pack()
     self.widgets()
     
   def widgets(self):
-    self.city_name = StringVar()
-    self.entry_name = Entry(self.parent,width=30, textvariable = self.city_name_base)
+    self.city_name = StringVar() 
+    self.city_name.set('City')
+    
+    self.label_city = LabelFrame(self.parent, text = "Choose your city", padx=1, pady=5, bg='#DF7401', fg='#8A4B08')
+    self.label_city.pack(ipadx=10, ipady=10)
+
+    self.entry_name = Entry(self.label_city, width=30, textvariable=self.city_name_base)
     self.entry_name.pack()
   
-    self.butt_apply = Button(self.parent, text='Submit', bg='Red', command=self.test)
-    self.butt_apply.pack()
-    
-    self.label_city = Label(self.parent, textvariable = self.city_name).pack()
+    self.city_prompt = Label(self. label_city, justify=RIGHT, textvariable=self.city_name, bg='#DF7401' )
+    self.city_prompt.pack(side=RIGHT)
+  
+    self.butt_apply = Button(self.label_city, text='Submit', bg='#FFBF00', command=self.change_city, width=20)
+    self.butt_apply.pack(side=LEFT)
+ 
+  def change_city(self):
+    self.city_name.set("Your city is " + self.city_name_base.get())
 
-  def test(self):
-    self.city_name.set(self.city_name_base.get())
-    
     
 
 class weather(gui):
@@ -53,7 +59,7 @@ def main():
   root = Tk()
   app_gui = gui(root)
 #  app = weather()
-  
+  root.resizable(0,0)
   root.mainloop()
   
   
