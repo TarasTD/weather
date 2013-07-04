@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from json import load
 from urllib2 import urlopen
 from Tkinter import *
@@ -16,23 +18,26 @@ class gui(Frame):
     self.widgets()
     
   def widgets(self):
+    self.city_name = StringVar()
     self.entry_name = Entry(self.parent,width=30, textvariable = self.city_name_base)
     self.entry_name.pack()
   
     self.butt_apply = Button(self.parent, text='Submit', bg='Red', command=self.test)
     self.butt_apply.pack()
     
+    self.label_city = Label(self.parent, textvariable = self.city_name).pack()
+
   def test(self):
-    self.city_name = self.city_name_base.get()
-    self.label_city = Label(self.parent, text=''+self.city_name)
-    self.label_city.pack()
+    self.city_name.set(self.city_name_base.get())
+    
     
 
 class weather(gui):
   def __init__(self, city_name):
+    self.label_city = 0
     self.city_name = app_gui.city_name
     self.data = urlopen("http://openweathermap.org/data/2.1/find/name?q="+self.city_name+"")
-    self.cities = load(self.data) 
+    self.cities = load(self.data)
     get_info()
     
   def get_info(self):
@@ -47,7 +52,7 @@ class weather(gui):
 def main():
   root = Tk()
   app_gui = gui(root)
-  app = weather(city_name)
+#  app = weather()
   
   root.mainloop()
   
@@ -57,15 +62,15 @@ if __name__ == '__main__':
   
 '''
 {u'humidity': 81,
- u'pressure': 1012,
- u'temp': 281.8,
- u'temp_max': 283.71,
- u'temp_min': 280.15}
+u'pressure': 1012,
+u'temp': 281.8,
+u'temp_max': 283.71,
+u'temp_min': 280.15}
 [{u'description': u'light rain',
-  u'icon': u'10d',
-  u'id': 500,
-  u'main': u'Rain'},
- {u'description': u'light intensity drizzle',
-  u'icon': u'09d',
-  u'id': 300,
-  u'main': u'Drizzle'}]'''
+u'icon': u'10d',
+u'id': 500,
+u'main': u'Rain'},
+{u'description': u'light intensity drizzle',
+u'icon': u'09d',
+u'id': 300,
+u'main': u'Drizzle'}]'''
