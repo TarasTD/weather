@@ -4,7 +4,7 @@ from json import load
 from urllib2 import urlopen
 from Tkinter import *
 
-class gui(Frame):
+class Main(Frame):
   def __init__(self, parent, bg='white'):
     self.city_name_base = StringVar()
     self.city_name_base.set('City name')
@@ -18,7 +18,7 @@ class gui(Frame):
     self.widgets()
     
   def widgets(self):
-    self.city_name = StringVar() 
+    self.city_name = StringVar()
     self.city_name.set('City')
     
     self.label_city = LabelFrame(self.parent, text = "Choose your city", padx=1, pady=5, bg='#DF7401', fg='#8A4B08')
@@ -35,13 +35,17 @@ class gui(Frame):
  
   def change_city(self):
     self.city_name.set("Your city is " + self.city_name_base.get())
+    self.city_name_1 = self.city_name_base.get()
+    city_name = Child(self.city_name_1)
+    child = Child(self.city_name_1)
 
-    
+class Child(Main):
+  def __init__(self, city_name_1):
+    self.city_name = city_name_1
+    self.fetch_raw()
 
-class weather(gui):
-  def __init__(self, city_name):
+  def fetch_raw(self):
     self.label_city = 0
-    self.city_name = app_gui.city_name
     self.data = urlopen("http://openweathermap.org/data/2.1/find/name?q="+self.city_name+"")
     self.cities = load(self.data)
     get_info()
@@ -53,12 +57,12 @@ class weather(gui):
       print(self.city['weather'])
 
     for line in cities['list']:
-      re.search()
+         re.search()
     
 def main():
   root = Tk()
-  app_gui = gui(root)
-#  app = weather()
+  app_gui = Main(root)
+
   root.resizable(0,0)
   root.mainloop()
   
