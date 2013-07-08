@@ -1,8 +1,14 @@
 #!/usr/bin/python
 
 from json import load
-from urllib2 import urlopen
+from urllib2 import *
 from Tkinter import *
+import socket
+from ast import literal_eval
+
+class Connection_timed_out():
+  def __init__(self, arg):
+    self.srgs = arg
 
 class Main(Frame):
   def __init__(self, parent, bg='white'):
@@ -36,7 +42,7 @@ class Main(Frame):
   def change_city(self):
     self.city_name.set("Your city is " + self.city_name_base.get())
     self.city_name_1 = self.city_name_base.get()
-    city_name = Child(self.city_name_1)
+
     child = Child(self.city_name_1)
 
 class Child(Main):
@@ -45,19 +51,23 @@ class Child(Main):
     self.fetch_raw()
 
   def fetch_raw(self):
-    self.label_city = 0
-    self.data = urlopen("http://openweathermap.org/data/2.1/find/name?q="+self.city_name+"")
+    self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
+    self.opener = build_opener(self.proxy)
+    install_opener(self.opener)
+
+    self.data = urlopen('http://openweathermap.org/data/2.1/find/name?q='+self.city_name+'&units=metric')
     self.cities = load(self.data)
-    get_info()
-    
+
+    self.get_info()
+
   def get_info(self):
     if self.cities['count'] > 0:
       self.city = self.cities['list'][0]
-      print(self.city['main'])
-      print(self.city['weather'])
 
-    for line in cities['list']:
-         re.search()
+      #for line in (self.city['main']):
+      print(self.city['main'])
+
+
     
 def main():
   root = Tk()
@@ -70,7 +80,11 @@ def main():
 if __name__ == '__main__':
   main()
   
-'''hello
+'''
+http://proxylv.ericpol.int/epol.proxy
+
+{u'pressure': 1027, u'temp_min': 24, u'temp_max': 25.149999999999999, u'temp': 24, u'humidity': 47}
+
 {u'humidity': 81,
 u'pressure': 1012,
 u'temp': 281.8,
