@@ -6,6 +6,7 @@ from Tkinter import *
 import socket
 from ast import literal_eval
 import subprocess
+import os
 
 class Connection_timed_out():
   def __init__(self, arg):
@@ -83,23 +84,36 @@ class Child(Main):
            
       self.desc1 = self.description.split(' ') 
       self.desc = "_".join(self.desc1)
+
+    for line in self.main:
+      self.match = re.search(r".+icon.+'(.+)'", line)
+      if self.match:
+        self.iconID = self.match.group(1)
+
     self.fetch_pictures()
 
   def fetch_pictures(self):
+    self.full_path_ico = ''
     self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
     self.opener = build_opener(self.proxy)
     install_opener(self.opener)
 
-    self.img = urlopen("http://openweathermap.org/img/w/10d.png").read()
+    self.img_path = r'./ico'
+    if not os.path.exists(self.img_path): os.makedirs(self.img_path)
+    self.img = open(''+self.img_path+'/'+self.iconID+'.png', 'w')
+    self.img.write(urlopen('http://openweathermap.org/img/w/'+self.iconID+'.png').read())
+    self.img.close()
 
+    self.current_path = os.getcwd()
+    self.full_path_ico = self.current_path + '/ico/'+self.iconID + '.png'
 
     self.notify()
 
-
   def notify(self):
-     temp = subprocess.Popen(["notify-send -u critical 'Temperature in "+self.city_name+"' "+str(self.temp)+" -i /afs/ericpol.int/home/x/d/xdmy/home/Desktop/10d.png"], stdout=subprocess.PIPE, shell= True).communicate()[0]      
+
+    temp = subprocess.Popen(["notify-send -u critical 'Temperature in "+self.city_name+"' "+str(self.temp)+" -i "+self.full_path_ico+""], stdout=subprocess.PIPE, shell= True).communicate()[0]      
       
-     temp = subprocess.Popen(["notify-send 'Weather in "+self.city_name+"' "+str(self.desc)+" "], stdout=subprocess.PIPE, shell= True).communicate()[0]
+    temp = subprocess.Popen(["notify-send 'Weather in "+self.city_name+"' "+str(self.desc)+" "], stdout=subprocess.PIPE, shell= True).communicate()[0]
 
 
 def main():
