@@ -124,7 +124,7 @@ if __name__ == '__main__':
   main()
   
 '''
-[{
+[{ JUST FOR TEST
 u'main': u'Clouds', 
 u'id': 803, 
 u'icon': u'04d', 
