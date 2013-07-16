@@ -45,7 +45,7 @@ class Main(Frame):
     self.city_name.set("Your city is " + self.city_name_base.get())
     self.city_name_1 = self.city_name_base.get()
     
-    self.city_name_1 = 'lviv'    # just for testing delete afterwards
+    self.city_name_1 = 'london'    # just for testing delete afterwards
 
     child = Child(self.city_name_1)
 
@@ -55,10 +55,6 @@ class Child(Main):
     self.fetch_raw()
 
   def fetch_raw(self):
-    self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
-    self.opener = build_opener(self.proxy)
-    install_opener(self.opener)
-
     self.data = urlopen('http://openweathermap.org/data/2.1/find/name?q='+self.city_name+'&units=metric')
     self.cities = load(self.data)
 
@@ -110,10 +106,10 @@ class Child(Main):
     self.notify()
 
   def notify(self):
-
     temp = subprocess.Popen(["notify-send -u critical 'Temperature in "+self.city_name+"' "+str(self.temp)+" -i "+self.full_path_ico+""], stdout=subprocess.PIPE, shell= True).communicate()[0]      
       
     temp = subprocess.Popen(["notify-send 'Weather in "+self.city_name+"' "+str(self.desc)+" "], stdout=subprocess.PIPE, shell= True).communicate()[0]
+
 
 
 def main():
