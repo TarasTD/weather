@@ -8,10 +8,6 @@ from ast import literal_eval
 import subprocess
 import os
 
-class Connection_timed_out():
-  def __init__(self, arg):
-    self.srgs = arg
-
 class Main(Frame):
   def __init__(self, parent, bg='white'):
     self.city_name_base = StringVar()
@@ -45,7 +41,7 @@ class Main(Frame):
     self.city_name.set("Your city is " + self.city_name_base.get())
     self.city_name_1 = self.city_name_base.get()
     
-    self.city_name_1 = 'london'    # just for testing delete afterwards
+    self.city_name_1 = 'London'    # just for testing delete afterwards
 
     child = Child(self.city_name_1)
 
@@ -55,6 +51,10 @@ class Child(Main):
     self.fetch_raw()
 
   def fetch_raw(self):
+    self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
+    self.opener = build_opener(self.proxy)
+    install_opener(self.opener)
+
     self.data = urlopen('http://openweathermap.org/data/2.1/find/name?q='+self.city_name+'&units=metric')
     self.cities = load(self.data)
 
@@ -89,16 +89,23 @@ class Child(Main):
     self.fetch_pictures()
 
   def fetch_pictures(self):
+    '''fetching and creating icon of current weather'''
+
     self.full_path_ico = ''
+
     self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
     self.opener = build_opener(self.proxy)
     install_opener(self.opener)
 
     self.img_path = r'./ico'
     if not os.path.exists(self.img_path): os.makedirs(self.img_path)
-    self.img = open(''+self.img_path+'/'+self.iconID+'.png', 'w')
-    self.img.write(urlopen('http://openweathermap.org/img/w/'+self.iconID+'.png').read())
-    self.img.close()
+
+    try:                                                            #check if this icon already exists
+      with open(''+self.img_path+'/'+self.iconID+'.png'):pass
+    except IOError:                                                 # if icon doesn't exist - create it
+      self.img = open(''+self.img_path+'/'+self.iconID+'.png', 'w')
+      self.img.write(urlopen('http://openweathermap.org/img/w/'+self.iconID+'.png').read())
+      self.img.close()
 
     self.current_path = os.getcwd()
     self.full_path_ico = self.current_path + '/ico/'+self.iconID + '.png'
@@ -106,11 +113,8 @@ class Child(Main):
     self.notify()
 
   def notify(self):
-    temp = subprocess.Popen(["notify-send -u critical 'Temperature in "+self.city_name+"' "+str(self.temp)+" -i "+self.full_path_ico+""], stdout=subprocess.PIPE, shell= True).communicate()[0]      
-      
-    temp = subprocess.Popen(["notify-send 'Weather in "+self.city_name+"' "+str(self.desc)+" "], stdout=subprocess.PIPE, shell= True).communicate()[0]
 
-
+    temp = subprocess.Popen(["notify-send -u critical 'Temperature in "+self.city_name+" is "+str(self.temp)+"C \n"+str(self.desc)+"'  -i "+self.full_path_ico+""], stdout=subprocess.PIPE, shell= True).communicate()[0]      
 
 def main():
   root = Tk()
@@ -123,36 +127,3 @@ def main():
 if __name__ == '__main__':
   main()
   
-'''
-[{
-u'main': u'Clouds', 
-u'id': 803, 
-u'icon': u'04d', 
-u'description': 
-u'broken clouds'
-}]
-
-
-http://proxylv.ericpol.int/epol.proxy
-
-{
-u'pressure': 1027, 
-u'temp_min': 24, 
-u'temp_max': 25.149999999999999, 
-u'temp': 24, 
-u'humidity': 47
-}
-
-{u'humidity': 81,
-u'pressure': 1012,
-u'temp': 281.8,
-u'temp_max': 283.71,
-u'temp_min': 280.15}
-[{u'description': u'light rain',
-u'icon': u'10d',
-u'id': 500,
-u'main': u'Rain'},
-{u'description': u'light intensity drizzle',
-u'icon': u'09d',
-u'id': 300,
-u'main': u'Drizzle'}]'''
