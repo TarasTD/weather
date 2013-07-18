@@ -8,7 +8,7 @@ from ast import literal_eval
 import subprocess
 import os
 
-class Main(Frame):
+class Gui(Frame):
   def __init__(self, parent, bg='white'):
     self.city_name_base = StringVar()
     self.city_name_base.set('City name')
@@ -43,9 +43,9 @@ class Main(Frame):
     
     self.city_name_1 = 'London'    # just for testing delete afterwards
 
-    child = Child(self.city_name_1)
+    Fetch_weather = fetch_weather(self.city_name_1)
 
-class Child(Main):
+class fetch_weather(Gui):
   def __init__(self, city_name_1):
     self.city_name = city_name_1
     self.fetch_raw()
@@ -118,7 +118,7 @@ class Child(Main):
 
 def main():
   root = Tk()
-  app_gui = Main(root)
+  app_gui = Gui(root)
 
   root.resizable(0,0)
   root.mainloop()
