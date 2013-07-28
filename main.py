@@ -51,10 +51,6 @@ class fetch_weather(Gui):
     self.fetch_raw()
 
   def fetch_raw(self):
-    self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
-    self.opener = build_opener(self.proxy)
-    install_opener(self.opener)
-
     self.data = urlopen('http://openweathermap.org/data/2.1/find/name?q='+self.city_name+'&units=metric')
     self.cities = load(self.data)
 
@@ -92,10 +88,6 @@ class fetch_weather(Gui):
     '''fetching and creating icon of current weather'''
 
     self.full_path_ico = ''
-
-    self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
-    self.opener = build_opener(self.proxy)
-    install_opener(self.opener)
 
     self.img_path = r'./ico'
     if not os.path.exists(self.img_path): os.makedirs(self.img_path)
