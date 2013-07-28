@@ -41,7 +41,7 @@ class Gui(Frame):
     self.city_name.set("Your city is " + self.city_name_base.get())
     self.city_name_1 = self.city_name_base.get()
     
-    self.city_name_1 = 'London'    # just for testing delete afterwards
+#    self.city_name_1 = 'London'    # just for testing delete afterwards
 
     Fetch_weather = fetch_weather(self.city_name_1)
 
