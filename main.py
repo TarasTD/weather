@@ -2,48 +2,53 @@
 
 from json import load
 from urllib2 import *
-from Tkinter import *
 import socket
 from ast import literal_eval
 import subprocess
 import os
 
-class Gui(Frame):
-  def __init__(self, parent, bg='white'):
-    self.city_name_base = StringVar()
-    self.city_name_base.set('City name')
-    Frame.__init__(self, parent, bg='White')
-    self.parent = parent
-    self.initUI()
-    
-  def initUI(self):
-    self.parent.title("Weather checker 1.0")
-    self.pack()
-    self.widgets()
-    
-  def widgets(self):
-    self.city_name = StringVar()
-    self.city_name.set('City')
+import gtk
+import appindicator
+import pynotify
 
-    self.label_city = LabelFrame(self.parent, text = "Choose your city", padx=1, pady=5, bg='#DF7401', fg='#8A4B08')
-    self.label_city.pack(ipadx=10, ipady=10)
+class Gui():
+  def __init__(self):
+    self.ind = appindicator.Indicator ("example-simple-client", "indicator-messages", appindicator.CATEGORY_APPLICATION_STATUS)
+    self.ind.set_status (appindicator.STATUS_ACTIVE)
+    self.ind.set_attention_icon ("indicator-messages-new")
+    self.ind.set_icon("distributor-logo")
 
-    self.entry_name = Entry(self.label_city, width=30, textvariable=self.city_name_base)
-    self.entry_name.pack()
-  
-    self.city_prompt = Label(self. label_city, justify=RIGHT, textvariable=self.city_name, bg='#DF7401' )
-    self.city_prompt.pack(side=RIGHT)
-  
-    self.butt_apply = Button(self.label_city, text='Submit', bg='#FFBF00', command=self.change_city, width=20)
-    self.butt_apply.pack(side=LEFT)
- 
-  def change_city(self):
-    self.city_name.set("Your city is " + self.city_name_base.get())
-    self.city_name_1 = self.city_name_base.get()
-    
-#    self.city_name_1 = 'London'    # just for testing delete afterwards
+        # create a menu
+    self.menu = gtk.Menu()
 
-    Fetch_weather = fetch_weather(self.city_name_1)
+        # create items for the menu - labels, checkboxes, radio buttons and images are supported:
+        
+    item = gtk.MenuItem("Regular Menu Item")
+    item.show()
+    self.menu.append(item)
+
+    check = gtk.CheckMenuItem("Check Menu Item")
+    check.show()
+    self.menu.append(check)
+
+    radio = gtk.RadioMenuItem(None, "Radio Menu Item")
+    radio.show()
+    self.menu.append(radio)
+
+    image = gtk.ImageMenuItem(gtk.STOCK_QUIT)
+    image.connect("activate", self.quit)
+    image.show()
+    self.menu.append(image)
+                    
+    self.menu.show()
+
+    self.ind.set_menu(self.menu)
+
+  def quit(self, widget, data=None):
+    gtk.main_quit()
+
+
+
 
 class fetch_weather(Gui):
   def __init__(self, city_name_1):
@@ -109,12 +114,8 @@ class fetch_weather(Gui):
     temp = subprocess.Popen(["notify-send -u critical 'Temperature in "+self.city_name+" is "+str(self.temp)+"C \n"+str(self.desc)+"'  -i "+self.full_path_ico+""], stdout=subprocess.PIPE, shell= True).communicate()[0]      
 
 def main():
-  root = Tk()
-  app_gui = Gui(root)
-
-  root.resizable(0,0)
-  root.mainloop()
-  
+  gui = Gui()
+  gtk.main()
   
 if __name__ == '__main__':
   main()
