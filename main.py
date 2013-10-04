@@ -45,7 +45,7 @@ class Main(Frame):
     self.city_name.set("Your city is " + self.city_name_base.get())
     self.city_name_1 = self.city_name_base.get()
     
-    self.city_name_1 = 'london'    # just for testing delete afterwards
+#    self.city_name_1 = 'london'    # just for testing delete afterwards
 
     child = Child(self.city_name_1)
 
@@ -90,9 +90,9 @@ class Child(Main):
 
   def fetch_pictures(self):
     self.full_path_ico = ''
-    self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
-    self.opener = build_opener(self.proxy)
-    install_opener(self.opener)
+#    self.proxy = ProxyHandler({'http': '172.17.35.1:8080'})    #just comment 3 lines if you don't use proxy
+#    self.opener = build_opener(self.proxy)
+#    install_opener(self.opener)
 
     self.img_path = r'./ico'
     if not os.path.exists(self.img_path): os.makedirs(self.img_path)
