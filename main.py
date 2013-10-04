@@ -68,8 +68,8 @@ class Child(Main):
       self.temp_min = (self.city['main']['temp_min'])
       self.pressure = (self.city['main']['pressure'])
       self.temp = (self.city['main']['temp'])
-      self.humidity = (self.city['main']['humidity'])
- 
+#      self.humidity = (self.city['main']['humidity'])  sometime there is HM smt not
+  
       self.main = str((self.city['weather'])).split(',')
 
       self.desc = ''
